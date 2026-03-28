@@ -87,7 +87,7 @@ where Z_r is the proportion of rating r in the current training set.
 ## Repository Structure
 
 ```
-ST-MMMF-Replication/
+RS_Research_Paper_Replication_ST-MMMF/
 │
 ├── README.md                      ← This file
 ├── requirements.txt               ← Python dependencies
@@ -95,7 +95,8 @@ ST-MMMF-Replication/
 │
 ├── src/
 │   ├── movielens_100k_eda.py      ← EDA script for MovieLens 100K
-│   └── movielens_1m_eda.py        ← EDA script for MovieLens 1M
+│   ├── movielens_1m_eda.py        ← EDA script for MovieLens 1M
+│   └── rsproject.ipynb            ← Recommendation System Replication Code
 │
 ├── data/
 │   ├── ml-100k/                   ← MovieLens 100K raw data
@@ -114,7 +115,26 @@ ST-MMMF-Replication/
 │       ├── users.dat              ← User demographics
 │       └── README                 ← Official dataset documentation
 │
-├── outputs/
+├── results/
+│   ├── ml-100k-eda-output/                  ← EDA results for MovieLens 100K dataset
+│   │   ├── step4_rating_distribution.png    ← Rating distribution (histogram)
+│   │   ├── step5_user_activity.png          ← User activity distribution
+│   │   ├── step6_movie_popularity.png       ← Movie popularity analysis
+│   │   ├── step7_genre_distribution.png     ← Genre frequency distribution
+│   │   ├── step8_user_demographics.png      ← User demographics (age, gender)
+│   │   ├── step9_rating_trends.png          ← Rating trends over time
+│   │   └──  step10_join_integrity.png        ← Data consistency / join validation
+│   │
+│   ├── ml-1m-eda-output/                    ← EDA results for MovieLens 1M dataset
+│   │   ├── 01_rating_distribution.png       ← Rating distribution
+│   │   ├── 02_user_activity_distribution.png← User activity distribution
+│   │   ├── 03_movie_popularity_distribution.png ← Movie popularity
+│   │   ├── 04_genre_distribution.png        ← Genre distribution
+│   │   ├── 05_age_analysis.png              ← Age group analysis
+│   │   ├── 06_gender_analysis.png           ← Gender distribution
+│   │   ├── 07_occupation_analysis.png       ← Occupation analysis
+│   │   └──  EDA_SUMMARY.txt                  ← Summary insights from EDA
+│   │
 │   ├── fig5_rating_distribution.png   ← Rating distribution (Figure 5)
 │   ├── fig6_performance_curves.png    ← MAE/RMSE curves (Figure 6)
 │   ├── table_100K_train_iter1.png     ← Confusion matrix — 100K train, iter 1
@@ -128,7 +148,8 @@ ST-MMMF-Replication/
 │   ├── performance_results.csv        ← MAE/RMSE per iteration (all models)
 │   └── output.txt                     ← Full console log from execution
 │
-└── docs/
+└── document/
+    ├── Paper 22                       ← Original Research Paper 
     └── replication_manual.docx        ← Detailed replication manual
 ```
 
