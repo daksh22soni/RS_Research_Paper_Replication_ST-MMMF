@@ -258,8 +258,7 @@ All generated plots are saved to the working directory.
 All results are pre-generated and available in the `outputs/` directory.
 
 ### Rating Distribution (Figure 5)
-
-![Rating Distribution](outputs/fig5_rating_distribution.png)
+<img width="1634" height="551" alt="image" src="https://github.com/user-attachments/assets/6ed524c3-d37f-4403-86d5-46690a9df7d0" />
 
 Both datasets exhibit highly imbalanced rating distributions, with ratings 3 and 4 dominating. The ST-MMMF augmentation strategy explicitly accounts for this imbalance using inverse-frequency weighting.
 
