@@ -304,7 +304,7 @@ The overlap column confirms **monotonicity**: entries predicted with high confid
 |   1M MAE  |  0.792  | 0.680 | 1.757 | 0.667 |     1.419     |
 |  1M RMSE  |  1.096  | 0.963 | 2.138 | 0.952 |     1.806     |
 
-Full per-iteration results are available in [`outputs/performance_results.csv`](outputs/performance_results.csv).
+Full per-iteration results are available in [`outputs/performance_results.csv`](results/performance_results.csv).
 
 ---
 
