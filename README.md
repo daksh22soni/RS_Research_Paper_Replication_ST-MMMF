@@ -1,0 +1,309 @@
+# ST-MMMF: Data Augmentation and Refinement for Recommender Systems
+
+> Replication study of **"Data Augmentation and Refinement for Recommender System: A Semi-Supervised Approach Using Maximum Margin Matrix Factorization"**
+> Shamal Shaikh, Venkateswara Rao Kagita, Vikas Kumar, Arun K Pujari — arXiv:2306.13050v3
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Paper Summary](#paper-summary)
+- [Methodology](#methodology)
+- [Repository Structure](#repository-structure)
+- [Datasets](#datasets)
+- [Setup](#setup)
+- [Usage](#usage)
+- [Results](#results)
+- [References](#references)
+
+---
+
+## Overview
+
+This repository contains the full replication of the **ST-MMMF** (Self-Training with Maximum Margin Matrix Factorization) algorithm proposed in Paper 22. The study implements a semi-supervised data augmentation and refinement pipeline for collaborative filtering-based recommender systems, evaluated on the MovieLens 100K and MovieLens 1M benchmark datasets.
+
+---
+
+## Paper Summary
+
+Collaborative Filtering (CF) recommender systems suffer from **data sparsity** — most user-item ratings are unobserved. This paper addresses sparsity by proposing:
+
+- A **self-training semi-supervised loop** that iteratively augments the sparse rating matrix with high-confidence predicted ratings
+- A **data refinement step** that removes low-confidence known ratings from the training set
+- Use of **Maximum Margin Matrix Factorization (MMMF)** as the base learner, exploiting its geometrical decision-boundary interpretation to define confidence regions
+
+The key insight is that MMMF's learned threshold structure provides a natural confidence signal: predictions far from decision boundaries (deep inside a rating region) are considered high-confidence and eligible for augmentation, while known ratings close to boundaries are considered unreliable and are refined away.
+
+---
+
+## Methodology
+
+### Maximum Margin Matrix Factorization (MMMF)
+
+Given a sparse rating matrix **Y ∈ R^(N×M)**, MMMF learns factor matrices **U ∈ R^(N×d)** and **V ∈ R^(M×d)** and a per-user threshold matrix **Θ** by minimizing a regularized smooth hinge loss:
+
+```
+min J(U, V, Θ) = Σ h(T^r_ij · (θ_{i,r} - U_i V_j^T)) + (λ/2)(‖U‖²_F + ‖V‖²_F)
+```
+
+Ratings are predicted by mapping the real-valued score `x_ij = U_i V_j^T` to the discrete scale using the learned thresholds.
+
+### ST-MMMF Algorithm
+
+Each iteration consists of four stages:
+
+| Stage | Description |
+|-------|-------------|
+| **1. Training** | Run MMMF on current rating matrix Y to obtain U, V, Θ |
+| **2. Augmentation** | Add unobserved entries predicted with high confidence (inside the central region bounded by τ₁) |
+| **3. Refinement** | Remove known entries predicted with low confidence (within τ₂ of a decision boundary) |
+| **4. Replacement** | Update Y with the augmented and refined matrix for the next iteration |
+
+**Confidence criterion** for augmentation (Equation 12):
+```
+θ_{i,r-1} + ϑ_i · τ₁ < U_i V_j^T < θ_{i,r} − ϑ_i · τ₁
+```
+
+**Confidence criterion** for refinement (Equation 13):
+```
+θ_{i,r} − ϑ_i · τ₂ < U_i V_j^T < θ_{i,r} + ϑ_i · τ₂
+```
+
+where `ϑ_i` is the average inter-threshold gap for user i, and τ₁, τ₂ are shifting parameters (τ₁ > τ₂).
+
+### Handling Class Imbalance
+
+To prevent augmentation from amplifying the dominant rating class, augmented samples are weighted inversely proportional to their current class frequency (Equation 14):
+
+```
+weight(r) = (1 − Z_r) / Σ_j (1 − Z_j)
+```
+
+where Z_r is the proportion of rating r in the current training set.
+
+---
+
+## Repository Structure
+
+```
+ST-MMMF-Replication/
+│
+├── README.md                      ← This file
+├── requirements.txt               ← Python dependencies
+├── .gitignore                     ← Files excluded from version control
+│
+├── src/
+│   ├── movielens_100k_eda.py      ← EDA script for MovieLens 100K
+│   └── movielens_1m_eda.py        ← EDA script for MovieLens 1M
+│
+├── data/
+│   ├── ml-100k/                   ← MovieLens 100K raw data
+│   │   ├── u.data                 ← Full dataset (100,000 ratings)
+│   │   ├── u.item                 ← Movie information
+│   │   ├── u.user                 ← User demographics
+│   │   ├── u.genre                ← Genre list
+│   │   ├── u.occupation           ← Occupation list
+│   │   ├── u1.base / u1.test      ← 80/20 split fold 1
+│   │   ├── ...                    ← Folds 2–5 + ua/ub splits
+│   │   └── README                 ← Official dataset documentation
+│   │
+│   └── ml-1m/                     ← MovieLens 1M raw data
+│       ├── ratings.dat            ← 1,000,209 ratings
+│       ├── movies.dat             ← Movie information
+│       ├── users.dat              ← User demographics
+│       └── README                 ← Official dataset documentation
+│
+├── outputs/
+│   ├── fig5_rating_distribution.png   ← Rating distribution (Figure 5)
+│   ├── fig6_performance_curves.png    ← MAE/RMSE curves (Figure 6)
+│   ├── table_100K_train_iter1.png     ← Confusion matrix — 100K train, iter 1
+│   ├── table_100K_train_iter50.png    ← Confusion matrix — 100K train, iter 50
+│   ├── table_100K_test_iter1.png      ← Confusion matrix — 100K test, iter 1
+│   ├── table_100K_test_iter50.png     ← Confusion matrix — 100K test, iter 50
+│   ├── table_1M_train_iter1.png       ← Confusion matrix — 1M train, iter 1
+│   ├── table_1M_train_iter50.png      ← Confusion matrix — 1M train, iter 50
+│   ├── table_1M_test_iter1.png        ← Confusion matrix — 1M test, iter 1
+│   ├── table_1M_test_iter50.png       ← Confusion matrix — 1M test, iter 50
+│   ├── performance_results.csv        ← MAE/RMSE per iteration (all models)
+│   └── output.txt                     ← Full console log from execution
+│
+└── docs/
+    └── replication_manual.docx        ← Detailed replication manual
+```
+
+---
+
+## Datasets
+
+Both datasets are the standard MovieLens benchmarks from [GroupLens](https://grouplens.org/datasets/movielens/).
+
+### MovieLens 100K
+
+| Property | Value |
+|----------|-------|
+| Users | 943 |
+| Movies | 1,682 |
+| Ratings | 100,000 |
+| Rating scale | 1–5 |
+| Sparsity | ~94% |
+
+### MovieLens 1M
+
+| Property | Value |
+|----------|-------|
+| Users | 6,040 |
+| Movies | 3,952 |
+| Ratings | 1,000,209 |
+| Rating scale | 1–5 |
+| Sparsity | ~96% |
+
+**Preprocessing** (as per paper Section 5.1):
+- Users with fewer than 20 observed ratings are removed
+- 80% of observed ratings used for training, 20% for testing
+
+---
+
+## Setup
+
+### Prerequisites
+
+- Python 3.8+
+- pip
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/<your-username>/ST-MMMF-Replication.git
+cd ST-MMMF-Replication
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Data
+
+The `data/` directory is included in this repository. Alternatively, download directly:
+
+- [MovieLens 100K](https://grouplens.org/datasets/movielens/100k/)
+- [MovieLens 1M](https://grouplens.org/datasets/movielens/1m/)
+
+---
+
+## Usage
+
+### Exploratory Data Analysis
+
+```bash
+# EDA on MovieLens 100K
+python src/movielens_100k_eda.py
+
+# EDA on MovieLens 1M
+python src/movielens_1m_eda.py
+```
+
+Both scripts perform a 10-step analysis covering:
+1. File purpose understanding
+2. Basic structure check
+3. Missing value analysis
+4. Rating distribution
+5. User activity analysis
+6. Movie popularity analysis
+7. Genre distribution
+8. Tag analysis (100K)
+9. Links completeness
+10. Join integrity check
+
+All generated plots are saved to the working directory.
+
+### Hyperparameters
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| `d` | tuned | Latent dimension size |
+| `λ` | {10^(i/16), i∈{1,5,...,40}} | Regularization parameter |
+| `τ₁` | 49.99 | High-confidence shifting parameter |
+| `τ₂` | 10 | Low-confidence shifting parameter |
+| `s` | 100% | Sampling percentage per iteration |
+| Max augmented/iter | 5,000 | Cap on new ratings per iteration |
+| Iterations | 50 | Number of ST-MMMF rounds |
+| Train/Test split | 80/20 | Standard split |
+
+---
+
+## Results
+
+All results are pre-generated and available in the `outputs/` directory.
+
+### Rating Distribution (Figure 5)
+
+![Rating Distribution](outputs/fig5_rating_distribution.png)
+
+Both datasets exhibit highly imbalanced rating distributions, with ratings 3 and 4 dominating. The ST-MMMF augmentation strategy explicitly accounts for this imbalance using inverse-frequency weighting.
+
+### Performance Over Augmentation Iterations (Figure 6)
+
+![Performance Curves](outputs/fig6_performance_curves.png)
+
+MAE and RMSE are tracked across 50 augmentation iterations for ST-MMMF and four baseline algorithms: SVD, NMF, SVD++, and Co-Clustering.
+
+### Confusion Matrices — MovieLens 100K
+
+| | Iteration 1 | Iteration 50 |
+|---|---|---|
+| **Training set** | ![](outputs/table_100K_train_iter1.png) | ![](outputs/table_100K_train_iter50.png) |
+| **Test set** | ![](outputs/table_100K_test_iter1.png) | ![](outputs/table_100K_test_iter50.png) |
+
+### Confusion Matrices — MovieLens 1M
+
+| | Iteration 1 | Iteration 50 |
+|---|---|---|
+| **Training set** | ![](outputs/table_1M_train_iter1.png) | ![](outputs/table_1M_train_iter50.png) |
+| **Test set** | ![](outputs/table_1M_test_iter1.png) | ![](outputs/table_1M_test_iter50.png) |
+
+### Table 4 — Effect of Data Augmentation (MovieLens 100K)
+
+| Iteration | # Observed | # Unobserved | # High-conf | # Augmented | # Overlap |
+|-----------|-----------|--------------|-------------|-------------|-----------|
+| 1 | 74,296 | 1,511,830 | 571,554 | 4,998 | N/A |
+| 2 | 74,440 | 1,511,686 | 915,251 | 4,997 | 571,554 |
+| 3 | 76,911 | 1,509,215 | 1,145,425 | 4,997 | 915,251 |
+| 4 | 80,524 | 1,505,602 | 1,275,230 | 4,998 | 1,145,425 |
+| 5 | 84,717 | 1,501,409 | 1,346,426 | 4,998 | 1,275,230 |
+
+The overlap column confirms **monotonicity**: entries predicted with high confidence in iteration *k* continue to be high-confidence in iteration *k+1*, satisfying the desirable property established by the paper.
+
+### Baseline Performance — Iteration 50 (MAE / RMSE)
+
+| Dataset | ST-MMMF | SVD | NMF | SVD++ | Co-Clustering |
+|---------|---------|-----|-----|-------|---------------|
+| 100K MAE | 0.800 | 0.797 | 1.597 | 0.795 | 1.472 |
+| 100K RMSE | 1.110 | 1.107 | 1.973 | 1.104 | 1.854 |
+| 1M MAE | 0.792 | 0.680 | 1.757 | 0.667 | 1.419 |
+| 1M RMSE | 1.096 | 0.963 | 2.138 | 0.952 | 1.806 |
+
+Full per-iteration results are available in [`outputs/performance_results.csv`](outputs/performance_results.csv).
+
+---
+
+## References
+
+```bibtex
+@article{shaikh2023stmmmf,
+  title   = {Data augmentation and refinement for recommender system:
+             A semi-supervised approach using maximum margin matrix factorization},
+  author  = {Shaikh, Shamal and Kagita, Venkateswara Rao and
+             Kumar, Vikas and Pujari, Arun K},
+  journal = {arXiv preprint arXiv:2306.13050},
+  year    = {2023}
+}
+```
+
+**Baseline implementations** use the [Surprise](https://surpriselib.com/) Python library (Hug, 2020).
+
+---
+
+## Acknowledgements
+
+Datasets provided by [GroupLens Research](https://grouplens.org/datasets/movielens/) at the University of Minnesota.
