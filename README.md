@@ -196,8 +196,8 @@ Both datasets are the standard MovieLens benchmarks from [GroupLens](https://gro
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/ST-MMMF-Replication.git
-cd ST-MMMF-Replication
+git clone https://github.com/daksh22soni/RS_Research_Paper_Replication_ST-MMMF.git
+cd RS_Research_Paper_Replication_ST-MMMF
 
 # Install dependencies
 pip install -r requirements.txt
@@ -286,23 +286,23 @@ MAE and RMSE are tracked across 50 augmentation iterations for ST-MMMF and four 
 ### Table 4 — Effect of Data Augmentation (MovieLens 100K)
 
 | Iteration | # Observed | # Unobserved | # High-conf | # Augmented | # Overlap |
-|-----------|-----------|--------------|-------------|-------------|-----------|
-| 1 | 74,296 | 1,511,830 | 571,554 | 4,998 | N/A |
-| 2 | 74,440 | 1,511,686 | 915,251 | 4,997 | 571,554 |
-| 3 | 76,911 | 1,509,215 | 1,145,425 | 4,997 | 915,251 |
-| 4 | 80,524 | 1,505,602 | 1,275,230 | 4,998 | 1,145,425 |
-| 5 | 84,717 | 1,501,409 | 1,346,426 | 4,998 | 1,275,230 |
+|-----------|------------|--------------|-------------|-------------|-----------|
+|     1     |   74,296   |  1,511,830   |   571,554   |    4,998    |    N/A    |
+|     2     |   74,440   |  1,511,686   |   915,251   |    4,997    |  571,554  |
+|     3     |   76,911   |  1,509,215   |  1,145,425  |    4,997    |  915,251  |
+|     4     |   80,524   |  1,505,602   |  1,275,230  |    4,998    | 1,145,425 |
+|     5     |   84,717   |  1,501,409   |  1,346,426  |    4,998    | 1,275,230 |
 
 The overlap column confirms **monotonicity**: entries predicted with high confidence in iteration *k* continue to be high-confidence in iteration *k+1*, satisfying the desirable property established by the paper.
 
 ### Baseline Performance — Iteration 50 (MAE / RMSE)
 
-| Dataset | ST-MMMF | SVD | NMF | SVD++ | Co-Clustering |
-|---------|---------|-----|-----|-------|---------------|
-| 100K MAE | 0.800 | 0.797 | 1.597 | 0.795 | 1.472 |
-| 100K RMSE | 1.110 | 1.107 | 1.973 | 1.104 | 1.854 |
-| 1M MAE | 0.792 | 0.680 | 1.757 | 0.667 | 1.419 |
-| 1M RMSE | 1.096 | 0.963 | 2.138 | 0.952 | 1.806 |
+|  Dataset  | ST-MMMF |  SVD  |  NMF  | SVD++ | Co-Clustering |
+|-----------|---------|-------|-------|-------|---------------|
+|  100K MAE |  0.800  | 0.797 | 1.597 | 0.795 |     1.472     |
+| 100K RMSE |  1.110  | 1.107 | 1.973 | 1.104 |     1.854     |
+|   1M MAE  |  0.792  | 0.680 | 1.757 | 0.667 |     1.419     |
+|  1M RMSE  |  1.096  | 0.963 | 2.138 | 0.952 |     1.806     |
 
 Full per-iteration results are available in [`outputs/performance_results.csv`](outputs/performance_results.csv).
 
@@ -320,9 +320,6 @@ Full per-iteration results are available in [`outputs/performance_results.csv`](
   year    = {2023}
 }
 ```
-
-**Baseline implementations** use the [Surprise](https://surpriselib.com/) Python library (Hug, 2020).
-
 ---
 
 ## Acknowledgements
