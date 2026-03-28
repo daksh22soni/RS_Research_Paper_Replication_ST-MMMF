@@ -264,7 +264,8 @@ Both datasets exhibit highly imbalanced rating distributions, with ratings 3 and
 
 ### Performance Over Augmentation Iterations (Figure 6)
 
-![Performance Curves](outputs/fig6_performance_curves.png)
+<img width="1934" height="1331" alt="image" src="https://github.com/user-attachments/assets/7aba65b5-3f99-42dd-88e6-e1d33ed7317a" />
+
 
 MAE and RMSE are tracked across 50 augmentation iterations for ST-MMMF and four baseline algorithms: SVD, NMF, SVD++, and Co-Clustering.
 
@@ -272,15 +273,15 @@ MAE and RMSE are tracked across 50 augmentation iterations for ST-MMMF and four 
 
 | | Iteration 1 | Iteration 50 |
 |---|---|---|
-| **Training set** | ![](outputs/table_100K_train_iter1.png) | ![](outputs/table_100K_train_iter50.png) |
-| **Test set** | ![](outputs/table_100K_test_iter1.png) | ![](outputs/table_100K_test_iter50.png) |
+| **Training set** | <img width="1769" height="593" alt="image" src="https://github.com/user-attachments/assets/6dcb40bc-1605-485b-9b68-5fe5034c8272" /> | <img width="1769" height="593" alt="image" src="https://github.com/user-attachments/assets/3c6abeb3-068f-42ae-be12-2d85bc27c318" /> |
+| **Test set** | <img width="1763" height="593" alt="image" src="https://github.com/user-attachments/assets/0df65ea5-aa38-484d-b55f-03f973d1784a" /> | <img width="1763" height="593" alt="image" src="https://github.com/user-attachments/assets/ffebd45d-02c6-4a27-851f-8322c39e0f8e" /> |
 
 ### Confusion Matrices — MovieLens 1M
 
 | | Iteration 1 | Iteration 50 |
 |---|---|---|
-| **Training set** | ![](outputs/table_1M_train_iter1.png) | ![](outputs/table_1M_train_iter50.png) |
-| **Test set** | ![](outputs/table_1M_test_iter1.png) | ![](outputs/table_1M_test_iter50.png) |
+| **Training set** | <img width="1774" height="593" alt="image" src="https://github.com/user-attachments/assets/5ad43b2b-b715-4117-896c-a3952160d6ad" /> | <img width="1774" height="593" alt="image" src="https://github.com/user-attachments/assets/49269917-2685-4a06-883d-63347889f127" /> |
+| **Test set** | <img width="1769" height="593" alt="image" src="https://github.com/user-attachments/assets/670f9cd4-4695-47bc-a23e-7169bb6ea716" /> | <img width="1769" height="593" alt="image" src="https://github.com/user-attachments/assets/4bf43bcc-d0eb-46a4-ad73-f5a5da27ca12" /> |
 
 ### Table 4 — Effect of Data Augmentation (MovieLens 100K)
 
