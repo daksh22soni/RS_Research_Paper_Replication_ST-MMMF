@@ -1,6 +1,6 @@
 # ST-MMMF: Data Augmentation and Refinement for Recommender Systems
 
-> Replication study of **"Data Augmentation and Refinement for Recommender System: A Semi-Supervised Approach Using Maximum Margin Matrix Factorization"**
+> Study of **"Data Augmentation and Refinement for Recommender System: A Semi-Supervised Approach Using Maximum Margin Matrix Factorization"**
 > Shamal Shaikh, Venkateswara Rao Kagita, Vikas Kumar, Arun K Pujari
 
 ---
