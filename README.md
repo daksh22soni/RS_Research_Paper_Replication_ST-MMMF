@@ -309,7 +309,7 @@ Full per-iteration results are available in [`results/performance_results.csv`](
 ---
 
 ## References
-[`ST-MMMF`] (document/Paper%2022.pdf)
+[`ST-MMMF`]([document/Paper22.pdf](https://www.sciencedirect.com/science/article/abs/pii/S0957417423024697))
 ```bibtex
 @article{shaikh2023stmmmf,
   title   = {Data augmentation and refinement for recommender system:
